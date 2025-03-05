@@ -2,10 +2,10 @@
 {
     public class UserModel
     {
-        public long Id { get; set; }
-        public string? Nombre { get; set; }
+        public int Id { get; set; }
+        public string? Name { get; set; }
         public string? Email { get; set; }
         public string? Password { get; set; }
-        public List<UsuarioRol>? UsuarioRoles { get; set; }
+        public string? Role { get; set; }
     }
 }

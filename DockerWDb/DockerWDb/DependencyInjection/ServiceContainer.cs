@@ -12,7 +12,7 @@ namespace DockerWDb.DependencyInjection
         {
             //agregar el string para la conexion a la base de datos
             services.AddDbContext<TContext>(option => option.UseSqlServer(
-               config.GetConnectionString("dbconnection"), sqlServerOption => sqlServerOption.EnableRetryOnFailure()));
+               config.GetConnectionString("connectiondbtarea3"), sqlServerOption => sqlServerOption.EnableRetryOnFailure()));
 
             //agregar el servicio del jwt
             JWTScheme.AddJWTSchemeCollection(services, config);
