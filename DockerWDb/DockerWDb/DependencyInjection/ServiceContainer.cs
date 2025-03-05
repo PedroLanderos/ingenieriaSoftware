@@ -1,4 +1,6 @@
 ﻿using DockerWDb.Data;
+using DockerWDb.Interfaces;
+using DockerWDb.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
@@ -12,6 +14,8 @@ namespace DockerWDb.DependencyInjection
             services.AddDbContext<TContext>(option => option.UseSqlServer(
                config.GetConnectionString("dbconnection"), sqlServerOption => sqlServerOption.EnableRetryOnFailure()));
 
+            //agregar el servicio del jwt
+            JWTScheme.AddJWTSchemeCollection(services, config);
 
             return services;
         }
@@ -21,7 +25,7 @@ namespace DockerWDb.DependencyInjection
             //add the database string 
             AddServices<AppDbContext>(services, config);
             //implements the interface and the repository to use the controller in cors 
-            //services.AddScoped<IUser, AuthenticationRepository>();
+            services.AddScoped<IUser, UserService>();
 
             return services;
         }
