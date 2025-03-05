@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthenticationApi.Applicati
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthenticationApi.Infrastructure", "AuthenticationApi.Infrastructure\AuthenticationApi.Infrastructure.csproj", "{D6238BED-FF8F-4B86-AF1A-E02583112C4F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Llaveremos.SharedLibrary", "..\Project.SharedLibrarySolution\Llaveremos.SharedLibrary\Llaveremos.SharedLibrary.csproj", "{DC48F6C8-C4E3-23EC-DB1A-E63341D7A70F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{D6238BED-FF8F-4B86-AF1A-E02583112C4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6238BED-FF8F-4B86-AF1A-E02583112C4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6238BED-FF8F-4B86-AF1A-E02583112C4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC48F6C8-C4E3-23EC-DB1A-E63341D7A70F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC48F6C8-C4E3-23EC-DB1A-E63341D7A70F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC48F6C8-C4E3-23EC-DB1A-E63341D7A70F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC48F6C8-C4E3-23EC-DB1A-E63341D7A70F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

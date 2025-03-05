@@ -1,0 +1,16 @@
+D:\Code\ingenieriaDeSoftware\proyecto\Project.Solution\Project.AuthenticationSolution\AuthenticationApi.Domain\bin\Debug\net8.0\AuthenticationApi.Domain.deps.json
+D:\Code\ingenieriaDeSoftware\proyecto\Project.Solution\Project.AuthenticationSolution\AuthenticationApi.Domain\bin\Debug\net8.0\AuthenticationApi.Domain.dll
+D:\Code\ingenieriaDeSoftware\proyecto\Project.Solution\Project.AuthenticationSolution\AuthenticationApi.Domain\bin\Debug\net8.0\AuthenticationApi.Domain.pdb
+D:\Code\ingenieriaDeSoftware\proyecto\Project.Solution\Project.AuthenticationSolution\AuthenticationApi.Domain\obj\Debug\net8.0\AuthenticationApi.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\Code\ingenieriaDeSoftware\proyecto\Project.Solution\Project.AuthenticationSolution\AuthenticationApi.Domain\obj\Debug\net8.0\AuthenticationApi.Domain.AssemblyInfoInputs.cache
+D:\Code\ingenieriaDeSoftware\proyecto\Project.Solution\Project.AuthenticationSolution\AuthenticationApi.Domain\obj\Debug\net8.0\AuthenticationApi.Domain.AssemblyInfo.cs
+D:\Code\ingenieriaDeSoftware\proyecto\Project.Solution\Project.AuthenticationSolution\AuthenticationApi.Domain\obj\Debug\net8.0\AuthenticationApi.Domain.csproj.CoreCompileInputs.cache
+D:\Code\ingenieriaDeSoftware\proyecto\Project.Solution\Project.AuthenticationSolution\AuthenticationApi.Domain\obj\Debug\net8.0\AuthenticationApi.Domain.sourcelink.json
+D:\Code\ingenieriaDeSoftware\proyecto\Project.Solution\Project.AuthenticationSolution\AuthenticationApi.Domain\obj\Debug\net8.0\AuthenticationApi.Domain.dll
+D:\Code\ingenieriaDeSoftware\proyecto\Project.Solution\Project.AuthenticationSolution\AuthenticationApi.Domain\obj\Debug\net8.0\refint\AuthenticationApi.Domain.dll
+D:\Code\ingenieriaDeSoftware\proyecto\Project.Solution\Project.AuthenticationSolution\AuthenticationApi.Domain\obj\Debug\net8.0\AuthenticationApi.Domain.pdb
+D:\Code\ingenieriaDeSoftware\proyecto\Project.Solution\Project.AuthenticationSolution\AuthenticationApi.Domain\obj\Debug\net8.0\ref\AuthenticationApi.Domain.dll
+D:\Code\ingenieriaDeSoftware\proyecto\Project.Solution\Project.AuthenticationSolution\AuthenticationApi.Domain\bin\Debug\net8.0\Llaveremos.SharedLibrary.dll
+D:\Code\ingenieriaDeSoftware\proyecto\Project.Solution\Project.AuthenticationSolution\AuthenticationApi.Domain\bin\Debug\net8.0\Llaveremos.SharedLibrary.pdb
+D:\Code\ingenieriaDeSoftware\proyecto\Project.Solution\Project.AuthenticationSolution\AuthenticationApi.Domain\obj\Debug\net8.0\AuthenticationApi.Domain.csproj.AssemblyReference.cache
+D:\Code\ingenieriaDeSoftware\proyecto\Project.Solution\Project.AuthenticationSolution\AuthenticationApi.Domain\obj\Debug\net8.0\Authenti.50218E98.Up2Date
