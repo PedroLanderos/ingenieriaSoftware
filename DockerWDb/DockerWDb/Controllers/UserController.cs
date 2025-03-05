@@ -1,5 +1,6 @@
 ﻿using DockerWDb.Interfaces;
 using DockerWDb.Models;
+using DockerWDb.Responses;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,74 +20,69 @@ namespace DockerWDb.Controllers
 
         // Registro de un nuevo usuario
         [HttpPost("register")]
-        public async Task<ActionResult<UserModel>> RegisterUser([FromBody] UserModel user)
+        public async Task<ActionResult<ApiResponse>> RegisterUser([FromBody] UserModel user)
         {
             if (user == null || !ModelState.IsValid)
                 return BadRequest("Invalid user data");
 
-            var registeredUser = await _userService.RegisterUser(user);
+            var response = await _userService.Register(user);
+            if (response.Flag)
+                return Ok(response.Message);
 
-            if (registeredUser == null)
-                return BadRequest("User registration failed");
-
-            return CreatedAtAction(nameof(GetUserById), new { id = registeredUser.Id }, registeredUser);
+            return BadRequest(response.Message);
         }
 
-        // Login de usuario
+        // Login de un usuario
         [HttpPost("login")]
-        public async Task<ActionResult<string>> LoginUser([FromBody] LoginModel login)
+        public async Task<ActionResult<ApiResponse>> LoginUser([FromBody] LoginModel login)
         {
             if (login == null || !ModelState.IsValid)
                 return BadRequest("Invalid login data");
 
-            var user = await _userService.LoginUser(login.Email, login.Password);
+            var response = await _userService.Login(login);
+            if (response.Flag)
+                return Ok(new { Token = response.Message }); // Devuelve el token
 
-            if (user == null)
-                return Unauthorized("Invalid credentials");
-
-            // Devolvemos el token JWT
-            return Ok(new { Token = user.Password });  // El token se almacena en user.Password
+            return Unauthorized(response.Message);
         }
 
-        // Obtener todos los usuarios (solo accesible por admin)
+        // Obtener todos los usuarios (solo accesible por administradores)
         [HttpGet]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<UserModel>>> GetAllUsers()
+        public async Task<ActionResult<ApiResponse>> GetAllUsers()
         {
             var users = await _userService.GetAllUsers();
-            if (users == null)
-                return NotFound("No users found");
+            if (users != null)
+                return Ok(users);
 
-            return Ok(users);
+            return NotFound("No users found");
         }
 
         // Obtener un usuario por ID
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<UserModel>> GetUserById(long id)
+        public async Task<ActionResult<ApiResponse>> GetUserById(int id)
         {
-            var user = await _userService.GetUserById(id);
+            var user = await _userService.GetUser(id);
+            if (user != null)
+                return Ok(user);
 
-            if (user == null)
-                return NotFound($"User with ID {id} not found");
-
-            return Ok(user);
+            return NotFound($"User with ID {id} not found");
         }
 
-        // Editar un usuario
+        // Editar un usuario por ID
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> EditUser(long id, [FromBody] UserModel user)
+        [Authorize]
+        public async Task<ActionResult<ApiResponse>> EditUserById(long id, [FromBody] UserModel user)
         {
             if (user == null || user.Id != id)
-                return BadRequest("Invalid user data");
+                return BadRequest("User ID mismatch");
 
-            var result = await _userService.EditUser(user);
+            var response = await _userService.EditUserById(user);
+            if (response.Flag)
+                return Ok(response.Message);
 
-            if (!result)
-                return NotFound("User not found or update failed");
-
-            return Ok("User updated successfully");
+            return BadRequest(response.Message);
         }
     }
 }

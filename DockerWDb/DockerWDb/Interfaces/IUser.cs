@@ -1,13 +1,14 @@
 ﻿using DockerWDb.Models;
+using DockerWDb.Responses;
 
 namespace DockerWDb.Interfaces
 {
     public interface IUser
     {
-        Task<UserModel> RegisterUser(UserModel user);
-        Task<UserModel> LoginUser(LoginModel loginModel);
+        Task<ApiResponse> Register(UserModel user);
+        Task<ApiResponse> Login(LoginModel login);
+        Task<UserModel> GetUser(int userId);
         Task<IEnumerable<UserModel>> GetAllUsers();
-        Task<UserModel> GetUserById(long id);
-        Task<bool> EditUser(UserModel user);
+        Task<ApiResponse> EditUserById(UserModel user);
     }
 }

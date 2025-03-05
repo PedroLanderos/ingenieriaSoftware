@@ -1,6 +1,5 @@
-﻿using DockerWDb.Data;
+﻿using DockerWDb.Models;
 using DockerWDb.Interfaces;
-using DockerWDb.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -8,122 +7,156 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using BCrypt.Net;
+using DockerWDb.Data;
+using DockerWDb.Responses;
 
 namespace DockerWDb.Services
 {
-    public class UserService : IUser
+    public class UserService(AppDbContext context, IConfiguration config) : IUser
     {
-        private readonly IConfiguration _config;
-        private readonly AppDbContext _context;
-
-        public UserService(IConfiguration config, AppDbContext context)
+        public async Task<UserModel> GetUserByEmail(string email)
         {
-            _config = config;
-            _context = context;
+            var user = await context.Users.FirstOrDefaultAsync(x => x.Email == email);
+            return user is null ? null! : user!;
+        }
+        public async Task<ApiResponse> EditUserById(UserModel user)
+        {
+            try
+            {
+                var existingUser = await context.Users.FindAsync(user.Id);
+
+                if (existingUser == null)
+                    return new ApiResponse(false, "User not found");
+
+                // Actualizar las propiedades del usuario
+                existingUser.Name = user.Name ?? existingUser.Name;
+                existingUser.Email = user.Email ?? existingUser.Email;
+
+                // Si se proporciona una nueva contraseña, encriptarla
+                if (!string.IsNullOrEmpty(user.Password))
+                {
+                    existingUser.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+                }
+
+                // Actualizar el rol del usuario si es necesario
+                existingUser.Role = user.Role ?? existingUser.Role;
+
+                // Guardar los cambios en la base de datos
+                context.Users.Update(existingUser);
+                await context.SaveChangesAsync();
+
+                return new ApiResponse(true, "User updated successfully");
+            }
+            catch (Exception ex)
+            {
+                // Capturar cualquier excepción y devolver un mensaje de error
+                return new ApiResponse(false, $"Error while updating user: {ex.Message}");
+            }
         }
 
-        // Método para registrar un usuario (con cifrado de la contraseña)
-        public async Task<UserModel> RegisterUser(UserModel user)
-        {
-            // Encriptar la contraseña
-            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-
-            // Agregar el usuario a la base de datos
-            _context.Usuarios.Add(user);
-            await _context.SaveChangesAsync();
-            return user;
-        }
-
-        // Método para hacer login (validar las credenciales y generar JWT)
-        public async Task<UserModel> LoginUser(string email, string password)
-        {
-            var user = await _context.Usuarios
-                .FirstOrDefaultAsync(u => u.Email == email);
-
-            if (user == null)
-                return null; // Usuario no encontrado
-
-            // Verificar la contraseña (comparar hash)
-            if (!BCrypt.Net.BCrypt.Verify(password, user.Password))
-                return null; // Contraseña incorrecta
-
-            // Generar JWT para el usuario
-            string token = GenerateToken(user);
-
-            // Asignar el token al usuario
-            user.Password = token; // O podrías devolverlo por separado si solo quieres el token
-
-            return user;  // Devolvemos el usuario con el token generado
-        }
-
-        // Obtener todos los usuarios (solo accesible por administradores)
         public async Task<IEnumerable<UserModel>> GetAllUsers()
         {
-            return await _context.Usuarios.ToListAsync();
+            try
+            {
+                var users = await context.Users.ToListAsync();
+                return users;
+            }
+            catch (Exception)
+            {
+
+                throw new Exception("error while getting all users");
+            }
         }
 
-        // Obtener un usuario por ID
-        public async Task<UserModel> GetUserById(long id)
+        public async Task<UserModel> GetUser(int userId)
         {
-            return await _context.Usuarios
-                .FirstOrDefaultAsync(u => u.Id == id);
+            try
+            {
+                var user = await context.Users.FindAsync(userId);
+
+                if (user == null) return null!;
+                else return user;
+            }
+            catch (Exception)
+            {
+
+                throw new Exception("error while get user");
+            }
         }
-
-        // Editar usuario
-        public async Task<bool> EditUser(UserModel user)
-        {
-            var existingUser = await _context.Usuarios.FindAsync(user.Id);
-
-            if (existingUser == null)
-                return false;
-
-            // Actualizar propiedades
-            existingUser.Nombre = user.Nombre;
-            existingUser.Email = user.Email;
-            existingUser.Password = string.IsNullOrEmpty(user.Password) ? existingUser.Password : BCrypt.Net.BCrypt.HashPassword(user.Password);
-            existingUser.UsuarioRoles = user.UsuarioRoles; // Actualizar roles si es necesario
-
-            _context.Usuarios.Update(existingUser);
-            await _context.SaveChangesAsync();
-
-            return true;
-        }
-
-        // Generar JWT para el usuario
         private string GenerateToken(UserModel user)
         {
-            var key = Encoding.UTF8.GetBytes(_config["Authentication:Key"]);
+            var key = Encoding.UTF8.GetBytes(config.GetSection("Authentication:Key").Value!);
             var securityKey = new SymmetricSecurityKey(key);
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
             var claims = new List<Claim>
             {
-                new(ClaimTypes.Name, user.Nombre),
-                new(ClaimTypes.Email, user.Email),
-                new("UserId", user.Id.ToString()) // Id del usuario como claim
+                new(ClaimTypes.Name, user.Name!),
+                new(ClaimTypes.Email, user.Email!),
+                new("UserId", user.Id.ToString()) // Agrega el userId como claim
             };
 
-            if (user.UsuarioRoles != null && user.UsuarioRoles.Any())
-            {
-                // Asignar roles
-                foreach (var usuarioRol in user.UsuarioRoles)
-                {
-                    if (usuarioRol.Rol != null)
-                    {
-                        claims.Add(new Claim(ClaimTypes.Role, usuarioRol.Rol.Nombre));
-                    }
-                }
-            }
+            if (!string.IsNullOrEmpty(user.Role) && !Equals("string", user.Role))
+                claims.Add(new(ClaimTypes.Role, user.Role!));
 
             var token = new JwtSecurityToken(
-                issuer: _config["Authentication:Issuer"],
-                audience: _config["Authentication:Audience"],
+                issuer: config["Authentication:Issuer"],
+                audience: config["Authentication:Audience"],
                 claims: claims,
                 expires: DateTime.UtcNow.AddHours(1),
                 signingCredentials: credentials
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task<ApiResponse> Login(LoginModel login)
+        {
+            try
+            {
+                UserModel user = await GetUserByEmail(login.Email!);
+                bool verifyPassword = BCrypt.Net.BCrypt.Verify(login.Password, user.Password);
+
+                if (!verifyPassword)
+                    return new ApiResponse(false, "invalid credentials");
+
+                string token = GenerateToken(user);
+                return new ApiResponse(true, token);
+
+
+            }
+            catch (Exception)
+            {
+
+                throw new Exception("error while login");
+            }
+        }
+
+        public async Task<ApiResponse> Register(UserModel user)
+        {
+            try
+            {
+                var getUser = await GetUserByEmail(user.Email!);
+                if (user is not null) return new ApiResponse(false, "user already exists");
+
+                var result = context.Users.Add(new UserModel()
+                {
+                    Name = user!.Name,
+                    Email = user.Email,
+                    Password = BCrypt.Net.BCrypt.HashPassword(user.Password),
+                    Role = user.Role
+                });
+
+                await context.SaveChangesAsync();
+
+                if (result.Entity.Id > 0) return new ApiResponse(true, "User registered");
+                else return new ApiResponse(false, "error with data");
+            }
+            catch (Exception)
+            {
+
+                throw new Exception("error while register");
+            }
         }
     }
 }
