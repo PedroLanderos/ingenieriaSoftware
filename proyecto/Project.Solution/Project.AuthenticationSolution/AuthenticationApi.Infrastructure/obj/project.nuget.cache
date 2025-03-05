@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "XVIsJr11/o0=",
+  "success": true,
+  "projectFilePath": "D:\\Code\\ingenieriaDeSoftware\\proyecto\\Project.Solution\\Project.AuthenticationSolution\\AuthenticationApi.Infrastructure\\AuthenticationApi.Infrastructure.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\lande\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
