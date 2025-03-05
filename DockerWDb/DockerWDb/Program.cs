@@ -8,6 +8,17 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddInfrastructureService(builder.Configuration);
 
+// Configure CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000") // Cambia esta URL según sea necesario
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -20,6 +31,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+// Enable CORS
+app.UseCors("AllowFrontend");
 
 app.UseRouting();
 
