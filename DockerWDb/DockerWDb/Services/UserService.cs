@@ -137,7 +137,7 @@ namespace DockerWDb.Services
             try
             {
                 var getUser = await GetUserByEmail(user.Email!);
-                if (user is not null) return new ApiResponse(false, "user already exists");
+                if (getUser is not null) return new ApiResponse(false, "user already exists");
 
                 var result = context.Users.Add(new UserModel()
                 {
