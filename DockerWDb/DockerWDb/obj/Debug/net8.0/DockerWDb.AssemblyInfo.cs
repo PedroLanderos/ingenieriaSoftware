@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DockerWDb")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2df03d12b52773c52143ba0b81565e2bdbc60ad8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e2184e040da478d7a705de95f4331728c3388b1a")]
 [assembly: System.Reflection.AssemblyProductAttribute("DockerWDb")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DockerWDb")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

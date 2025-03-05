@@ -1,7 +1,12 @@
+using DockerWDb.Data;
+using DockerWDb.DependencyInjection;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddInfrastructureService(builder.Configuration);
 
 var app = builder.Build();
 
