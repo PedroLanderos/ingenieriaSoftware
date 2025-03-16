@@ -7,10 +7,10 @@ import { AuthContext } from "../Context/AuthContext"; // Importa el contexto
 const LoginSignup = () => {
   const [isRegister, setIsRegister] = useState(false);
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    Email: "", // Ajustado a como lo espera el backend
+    Password: "",
     Name: "",
-    Role: "Normal", // Asignamos "Normal" como valor por defecto
+    Role: "Normal", // Valor por defecto
   });
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
@@ -33,29 +33,25 @@ const LoginSignup = () => {
         headers: { "Content-Type": "application/json" },
       });
 
+      console.log("Respuesta del servidor:", response.data); // Debugging
+
       if (response.status === 200) {
         if (isRegister) {
           setMessage("Usuario registrado exitosamente.");
-          setIsRegister(false); // Cambiar a la pantalla de login
+          setIsRegister(false);
         } else {
-          const token = response.data.message; // Extraer el token JWT
-          const user = {
-            name: response.data.name || "Usuario",
-            email: formData.email,
-            role: response.data.role, // Aquí asumimos que el rol está siendo enviado
-          }; // Obtener detalles del usuario (personalízalo según tu API)
-          login(token, user); // Llama al contexto para iniciar sesión
+          const token = response.data.token; // Asegúrate de que el backend devuelve `token`
 
-          // Verifica el rol del usuario
-          if (user.role === "Admin") {
-            navigate("/admin-panel"); // Redirige al panel de administrador si el rol es Admin
-          } else {
-            setMessage("Inicio de sesión exitoso"); // Muestra mensaje si no es admin
+          if (!token || typeof token !== "string") {
+            throw new Error("Token inválido o ausente.");
           }
+
+          login(token); // Iniciar sesión en el contexto
+          navigate("/"); // Redirige a la página principal
         }
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error en handleSubmit:", error);
       setMessage(
         isRegister
           ? "Error al registrar usuario. Verifica los datos."
@@ -80,30 +76,28 @@ const LoginSignup = () => {
         )}
         <form onSubmit={handleSubmit} className="loginSignup-fields">
           {isRegister && (
-            <>
-              <input
-                type="text"
-                name="Name"
-                placeholder="Nombre Completo"
-                value={formData.Name}
-                onChange={handleChange}
-                required
-              />
-            </>
+            <input
+              type="text"
+              name="Name"
+              placeholder="Nombre Completo"
+              value={formData.Name}
+              onChange={handleChange}
+              required
+            />
           )}
           <input
             type="email"
-            name="email"
+            name="Email"
             placeholder="Correo Electrónico"
-            value={formData.email}
+            value={formData.Email}
             onChange={handleChange}
             required
           />
           <input
             type="password"
-            name="password"
+            name="Password"
             placeholder="Contraseña"
-            value={formData.password}
+            value={formData.Password}
             onChange={handleChange}
             required
           />

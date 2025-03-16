@@ -114,21 +114,29 @@ namespace DockerWDb.Services
         {
             try
             {
-                UserModel user = await GetUserByEmail(login.Email!);
+                // Buscar usuario por email
+                UserModel? user = await GetUserByEmail(login.Email!);
+
+                // Si no se encuentra el usuario, devolver un error sin romper la app
+                if (user == null)
+                    return new ApiResponse(false, "Invalid credentials");
+
+                // Verificar la contraseña
                 bool verifyPassword = BCrypt.Net.BCrypt.Verify(login.Password, user.Password);
 
+                // Si la contraseña es incorrecta, devolver un error
                 if (!verifyPassword)
-                    return new ApiResponse(false, "invalid credentials");
+                    return new ApiResponse(false, "Invalid credentials");
 
+                // Generar token si el login es correcto
                 string token = GenerateToken(user);
                 return new ApiResponse(true, token);
-
-
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw new Exception("error while login");
+                // Registrar detalles del error y devolver un mensaje de error genérico
+                Console.WriteLine($"Error during login: {ex.Message}");
+                return new ApiResponse(false, "An unexpected error occurred during login");
             }
         }
 

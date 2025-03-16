@@ -1,0 +1,49 @@
+name: dockercompose14021622942552082014
+services:
+  dockerwdb:
+    build:
+      context: D:\Code\ingenieriaDeSoftware\DockerWDb
+      dockerfile: DockerWDb/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "5000"
+      ASPNETCORE_URLS: http://+:5000
+    image: dockerwdb
+    networks:
+      default: null
+    ports:
+      - mode: ingress
+        target: 5000
+        published: "5000"
+        protocol: tcp
+      - mode: ingress
+        target: 5000
+        protocol: tcp
+    volumes:
+      - type: bind
+        source: C:\Users\lande\AppData\Roaming/Microsoft/UserSecrets
+        target: /root/.microsoft/usersecrets
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\lande\AppData\Roaming/ASP.NET/Https
+        target: /root/.aspnet/https
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\lande\AppData\Roaming/Microsoft/UserSecrets
+        target: /home/app/.microsoft/usersecrets
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\lande\AppData\Roaming/ASP.NET/Https
+        target: /home/app/.aspnet/https
+        read_only: true
+        bind:
+          create_host_path: true
+networks:
+  default:
+    name: dockercompose14021622942552082014_default

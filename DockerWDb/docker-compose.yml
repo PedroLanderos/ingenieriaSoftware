@@ -1,21 +1,16 @@
-version: "3.8"
+version: '3.8'
+
 services:
-  app:
+  dockerwdb:
+    image: dockerwdb
     build:
       context: .
-      dockerfile: DockerWDb/Dockerfile  # Ruta del Dockerfile correcta
-    ports:
-      - "5000:5000"  # Mapea el puerto 5000 del host al puerto 80 del contenedor
-    depends_on:
-      - db
+      dockerfile: DockerWDb/Dockerfile
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development  # Configuración del entorno, opcional
-
-  db:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5000
     ports:
-      - "1434:1433"  # Mapea el puerto 1434 del host al puerto 1433 del contenedor
-    environment:
-      ACCEPT_EULA: "Y"
-      SA_PASSWORD: "RootPassword123"
-
+      - "5000:5000"  # Esto asegura que siempre use el puerto 5000 en localhost
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

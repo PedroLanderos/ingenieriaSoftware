@@ -10,9 +10,4 @@
     <ProjectReference Include="..\AuthenticationApi.Application\AuthenticationApi.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DependencyInjection\" />
-    <Folder Include="Repositories\" />
-  </ItemGroup>
-
 </Project>

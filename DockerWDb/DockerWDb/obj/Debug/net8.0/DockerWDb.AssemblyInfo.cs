@@ -11,10 +11,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("3749e8fd-ce2d-4065-95c3-ec5f3d80a204")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("DockerWDb")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+554ea671a687a4c0af2f994d82c0b43874c55270")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ccef5c013a544d21d6fb5262f44fd7eb37bc77d4")]
 [assembly: System.Reflection.AssemblyProductAttribute("DockerWDb")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DockerWDb")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
