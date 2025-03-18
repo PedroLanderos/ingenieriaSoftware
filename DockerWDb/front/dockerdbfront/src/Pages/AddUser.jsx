@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../config/apiConfig";
+import "./CSS/AddUser.css"; // 🔹 Se importa el CSS actualizado
 
 const AddUser = () => {
   const [userData, setUserData] = useState({
     Name: "",
     email: "",
     password: "",
-    Role: "Normal", // Por defecto "Normal"
+    Role: "Normal",
   });
 
   const [message, setMessage] = useState("");
@@ -24,23 +26,14 @@ const AddUser = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/user/register",
+        `${API_BASE_URL}/user/register`, // 🔹 Usa la URL base
         userData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        { headers: { "Content-Type": "application/json" } }
       );
 
       if (response.status === 200 || response.status === 201) {
         setMessage("Usuario agregado exitosamente.");
-        setUserData({
-          Name: "",
-          email: "",
-          password: "",
-          Role: "Normal", // Restablece el rol a "Normal" por defecto
-        });
+        setUserData({ Name: "", email: "", password: "", Role: "Normal" });
       }
     } catch (error) {
       console.error(error);
@@ -49,49 +42,15 @@ const AddUser = () => {
   };
 
   return (
-    <div className="create-product">
-      <div className="create-product-container">
+    <div className="add-user">
+      <div className="add-user-container">
         <h1>Agregar Usuario</h1>
-        {message && (
-          <p
-            className={`message ${
-              message.includes("exitosamente") ? "success" : "error"
-            }`}
-          >
-            {message}
-          </p>
-        )}
-        <form onSubmit={handleSubmit} className="create-product-fields">
-          <input
-            type="text"
-            name="Name"
-            placeholder="Nombre Completo"
-            value={userData.Name}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Correo Electrónico"
-            value={userData.email}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="Contraseña"
-            value={userData.password}
-            onChange={handleChange}
-            required
-          />
-          <select
-            name="Role"
-            value={userData.Role}
-            onChange={handleChange}
-            required
-          >
+        {message && <p className={`message ${message.includes("exitosamente") ? "success" : "error"}`}>{message}</p>}
+        <form onSubmit={handleSubmit} className="add-user-fields">
+          <input type="text" name="Name" placeholder="Nombre Completo" value={userData.Name} onChange={handleChange} required />
+          <input type="email" name="email" placeholder="Correo Electrónico" value={userData.email} onChange={handleChange} required />
+          <input type="password" name="password" placeholder="Contraseña" value={userData.password} onChange={handleChange} required />
+          <select name="Role" value={userData.Role} onChange={handleChange} required>
             <option value="Normal">Normal</option>
             <option value="Admin">Admin</option>
           </select>

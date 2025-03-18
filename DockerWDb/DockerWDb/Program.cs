@@ -13,16 +13,17 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000") // Cambia esta URL según sea necesario
+        policy.WithOrigins("http://localhost:3000") // Permite peticiones desde React
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials(); // Esto es necesario si usas `withCredentials: true` en axios
     });
 });
 
 var app = builder.Build();
 
 // Aplicar migraciones pendientes automáticamente
-/*using (var scope = app.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
@@ -34,7 +35,7 @@ var app = builder.Build();
     {
         Console.WriteLine($"Error al aplicar migraciones: {ex.Message}");
     }
-}*/
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

@@ -59,6 +59,7 @@
     display: block;
 }
 
+/* Submenú */
 .submenu {
     display: none;
     list-style: none;
@@ -122,6 +123,27 @@
     font-size: 18px;
     color: #555;
     line-height: 1.8;
+}
+
+/* Mensaje de carga */
+.loading {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin-top: 50px;
+}
+
+/* Placeholder */
+.panel-placeholder {
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    color: #666;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    border: 1px solid #ddd;
 }
 
 /* Botones */

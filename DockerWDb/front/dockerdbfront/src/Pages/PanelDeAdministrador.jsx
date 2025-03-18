@@ -1,34 +1,31 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Para redirigir si no es admin
-import './CSS/PanelDeAdministrador.css';
+import { useNavigate } from 'react-router-dom';
+import './CSS/PanelDeAdministrador.css'; // 🔹 Se asegura la importación correcta
 import AddUser from './AddUser';
 import ManageUsers from './ManageUsers';
-import { AuthContext } from '../Context/AuthContext'; // Contexto de autenticación
+import { AuthContext } from '../Context/AuthContext';
 
 const PanelDeAdministrador = () => {
   const [activeTab, setActiveTab] = useState('');
   const [activeSubmenu, setActiveSubmenu] = useState('');
-  const { auth } = useContext(AuthContext); // Obtener la información del usuario autenticado
+  const { auth } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true); // Estado para controlar la carga
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Verifica si el rol está disponible
     if (auth?.user?.role) {
       if (auth.user.role !== 'Admin') {
         alert('No tienes permiso para acceder a este panel.');
-        navigate('/'); // Redirigir si no es Admin
+        navigate('/');
       }
-      setLoading(false); // Deja de cargar si el rol está definido
+      setLoading(false);
     }
   }, [auth, navigate]);
 
-  // Mientras se verifica el rol, muestra un mensaje de carga
   if (loading) {
-    return <div>Cargando...</div>;
+    return <div className="loading">Cargando...</div>;
   }
 
-  // Si el usuario no es Admin (capa de protección adicional)
   if (auth?.user?.role !== 'Admin') {
     return null;
   }
@@ -44,7 +41,7 @@ const PanelDeAdministrador = () => {
       case 'administrarUsuarios':
         return <ManageUsers />;
       default:
-        return <div>Selecciona una sección del panel.</div>;
+        return <div className="panel-placeholder">Selecciona una sección del panel.</div>;
     }
   };
 

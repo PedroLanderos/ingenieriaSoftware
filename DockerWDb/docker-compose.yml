@@ -2,15 +2,35 @@ version: '3.8'
 
 services:
   dockerwdb:
+    container_name: dockerwdb
     image: dockerwdb
     build:
       context: .
       dockerfile: DockerWDb/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:5000
+      - ASPNETCORE_URLS=http://0.0.0.0:5000  # 🔹 Permite accesibilidad desde la red de Docker
     ports:
-      - "5000:5000"  # Esto asegura que siempre use el puerto 5000 en localhost
+      - "5000:5000"
+    networks:
+      - my_network  # 🔹 Ahora ambos servicios comparten la misma red
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  frontend:
+    container_name: dockerwdb-frontend
+    build:
+      context: ./front/dockerdbfront  # 🔹 Verifica que esta ruta es correcta
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"  # 🔹 Sirve el frontend en localhost:3000
+    depends_on:
+      - dockerwdb  # 🔹 Se asegura de que el backend esté corriendo antes
+    networks:
+      - my_network
+    restart: always
+
+networks:
+  my_network:
+    driver: bridge  # 🔹 Red compartida para comunicación directa entre frontend y backend
