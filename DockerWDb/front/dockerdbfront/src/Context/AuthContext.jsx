@@ -10,16 +10,24 @@ export const AuthProvider = ({ children }) => {
     user: null,
   });
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    const user = JSON.parse(localStorage.getItem("user"));
+  // 🔹 Verifica si hay sesión activa al cargar la app
+  const checkSession = () => {
+    const token = sessionStorage.getItem("token");
+    const user = JSON.parse(sessionStorage.getItem("user"));
+
     if (token && user) {
       setAuth({
         isAuthenticated: true,
         token,
         user,
       });
+    } else {
+      setAuth({ isAuthenticated: false, token: null, user: null });
     }
+  };
+
+  useEffect(() => {
+    checkSession(); // Se ejecuta una vez al cargar la app
   }, []);
 
   const login = (token) => {
@@ -31,7 +39,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const decodedToken = jwtDecode(token);
 
-      console.log("Token decodificado:", decodedToken); // Verifica el contenido del token
+      console.log("🔍 Token decodificado:", decodedToken);
 
       const user = {
         id: decodedToken.UserId ? parseInt(decodedToken.UserId, 10) : null,
@@ -40,23 +48,26 @@ export const AuthProvider = ({ children }) => {
         role: decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] || "Normal",
       };
 
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
+      // 🔹 Guardar en `sessionStorage` en lugar de `localStorage`
+      sessionStorage.setItem("token", token);
+      sessionStorage.setItem("user", JSON.stringify(user));
 
       setAuth({
         isAuthenticated: true,
         token,
         user,
       });
+
+      console.log("✅ Usuario autenticado correctamente:", user);
     } catch (error) {
-      console.error("Error al decodificar el token:", error);
+      console.error("❌ Error al decodificar el token:", error);
       logout();
     }
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("user");
     setAuth({
       isAuthenticated: false,
       token: null,
@@ -65,7 +76,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ auth, login, logout }}>
+    <AuthContext.Provider value={{ auth, login, logout, checkSession }}>
       {children}
     </AuthContext.Provider>
   );
