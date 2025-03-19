@@ -1,0 +1,107 @@
+name: dockercompose14021622942552082014
+services:
+  dockerwdb:
+    build:
+      context: D:\Code\ingenieriaDeSoftware\DockerWDb
+      dockerfile: DockerWDb/Dockerfile
+    container_name: dockerwdb
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+        required: true
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_HTTP_PORTS: "5000"
+      ASPNETCORE_URLS: http://0.0.0.0:5000
+    image: dockerwdb
+    networks:
+      my_network: null
+    ports:
+      - mode: ingress
+        target: 5000
+        published: "5000"
+        protocol: tcp
+      - mode: ingress
+        target: 5000
+        protocol: tcp
+    restart: on-failure
+    volumes:
+      - type: bind
+        source: C:\Users\lande\AppData\Roaming/Microsoft/UserSecrets
+        target: /home/app/.microsoft/usersecrets
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\lande\AppData\Roaming/Microsoft/UserSecrets
+        target: /root/.microsoft/usersecrets
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\lande\AppData\Roaming/ASP.NET/Https
+        target: /home/app/.aspnet/https
+        read_only: true
+        bind:
+          create_host_path: true
+      - type: bind
+        source: C:\Users\lande\AppData\Roaming/ASP.NET/Https
+        target: /root/.aspnet/https
+        read_only: true
+        bind:
+          create_host_path: true
+  frontend:
+    build:
+      context: D:\Code\ingenieriaDeSoftware\DockerWDb\front\dockerdbfront
+      dockerfile: Dockerfile
+    container_name: dockerwdb-frontend
+    depends_on:
+      dockerwdb:
+        condition: service_started
+        required: true
+    networks:
+      my_network: null
+    ports:
+      - mode: ingress
+        target: 80
+        published: "3000"
+        protocol: tcp
+    restart: always
+  sqlserver:
+    container_name: sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: Lancort20+1220
+    healthcheck:
+      test:
+        - CMD
+        - sqlcmd
+        - -U
+        - sa
+        - -P
+        - Lancort20+1220
+        - -Q
+        - SELECT 1
+      interval: 10s
+      retries: 5
+      start_period: 10s
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    networks:
+      my_network: null
+    ports:
+      - mode: ingress
+        target: 1433
+        published: "1400"
+        protocol: tcp
+    volumes:
+      - type: volume
+        source: sqlvolume
+        target: /var/opt/mssql
+        volume: {}
+networks:
+  my_network:
+    name: dockercompose14021622942552082014_my_network
+    driver: bridge
+volumes:
+  sqlvolume:
+    name: dockercompose14021622942552082014_sqlvolume

@@ -25,17 +25,9 @@ var app = builder.Build();
 // Aplicar migraciones pendientes automáticamente
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
-    try
-    {
-        var dbContext = services.GetRequiredService<AppDbContext>();
-        dbContext.Database.Migrate(); // Aplica las migraciones pendientes
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Error al aplicar migraciones: {ex.Message}");
-    }
-}
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    context.Database.Migrate();
+} 
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
